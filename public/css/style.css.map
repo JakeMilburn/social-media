@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,IAAK;EACH,MAAM,EAAE,CAAC;;ACDX,OAAQ;EACN,gBAAgB,EAAE,OAAO",
+"sources": ["../scss/partials/_base.scss","../scss/partials/_navbar.scss"],
+"names": [],
+"file": "style.css"
+}

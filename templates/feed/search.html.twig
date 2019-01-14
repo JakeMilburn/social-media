@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block body %}
+    {% for user in users %}
+        <a href="/social-media/public/profile/{{ user.id }}">{{ user.username }}</a>
+    {% endfor %}
+{% endblock %}
