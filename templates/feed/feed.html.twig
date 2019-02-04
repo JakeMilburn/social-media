@@ -3,19 +3,6 @@
 {% block title %}Hello FeedController!{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper {
-            margin: 1em auto;
-            max-width: 800px;
-            width: 95%;
-            font: 18px/1.5 sans-serif;
-        }
-
-        .example-wrapper code {
-            background: #F5F5F5;
-            padding: 2px 6px;
-        }
-    </style>
 
     <div class="example-wrapper">
 
@@ -23,6 +10,10 @@
 
             {{ post.title }}
             {{ post.body }}
+            {#<img src="../css/files/{{ user.username }}/posts/{{ post.path }}">#}
+            {#{% if user.id == app.user.id %}#}
+                {#<a href="#" class="delete-post" data-id="{{ post.id }}">Delete Post</a>#}
+            {#{% endif %}#}
             <a href="/social-media/public/profile/{{ post.author }}" class="btn btn-dark">Visit Profile</a>
 
         {% endfor %}

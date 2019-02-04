@@ -3,38 +3,39 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class PostType extends AbstractType
+
+class EditProfileType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
-                'title',
-                TextType::class,
+                'email',
+                EmailType::class,
                 [
                     'attr' => ['autofocus' => true],
-                    'label' => 'Title',
+                    'label' => 'Email',
                 ]
             )
             ->add(
-                'body',
-                TextareaType::class,
+                'username',
+                TextType::class,
                 [
-                    'label' => 'Body text',
+                    'label' => 'Username',
                 ]
             )
             ->add(
-                'images',
+                'profilePicture',
                 FileType::class,
                 [
-                    'label' => 'Images',
+                    'label' => 'Profile Picture',
                     'required' => false,
                 ]
             )
@@ -42,7 +43,7 @@ class PostType extends AbstractType
                 'save',
                 SubmitType::class,
                 [
-                    'label' => 'Post',
+                    'label' => 'Save Changes',
                 ]
             );
     }

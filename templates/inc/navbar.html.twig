@@ -1,6 +1,10 @@
 <nav class="navbar">
     <div class="container">
-        <a href="/media/public/" class="navbar-brand">A title</a>
+        <a href="/social-media/public/" class="navbar-brand">A title</a>
+        <form action="{{ path('search') }}" method="post">
+            <input type="text" name="search_criteria" placeholder="Search for a user">
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+        </form>
         <div>
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -9,6 +13,21 @@
                 {% if is_granted("ROLE_USER") %}
                     <li class="nav-item">
                         <a href="/social-media/public/profile/{{ app.user.id }}" class="nav-link">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{{ path('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="{{ path('friendrequest_check', {id: app.user.id}) }}" class="dropbtn nav-link requests">Requests</a>
+                        <div id="myDropdown" class="dropdown-content">
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ path('login') }}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('register') }}" class="nav-link">Register</a>
                     </li>
                 {% endif %}
                 {#{% if is_granted('ROLE_ADMIN') %}#}
@@ -31,11 +50,6 @@
                     {#</li>#}
                 {#{% endif %}#}
             </ul>
-
         </div>
-        <form action="{{ path('search') }}" method="post">
-            <input type="text" name="search_criteria" placeholder="Search for a user">
-            <button type="submit" class="btn btn-primary mt-3">Search</button>
-        </form>
     </div>
 </nav>

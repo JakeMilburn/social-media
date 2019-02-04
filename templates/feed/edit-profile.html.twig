@@ -1,0 +1,4 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+<a class="edit-password" href="{{ path('change_password', {id: app.user.id}) }}">Change Password</a>

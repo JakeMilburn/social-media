@@ -3,33 +3,63 @@
 {% block title %}Users Profile{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
-
+    {% for msg in app.session.flashBag.get('success') %}
+        <div class="alert alert-success">
+            {{ msg }}
+        </div>
+    {% endfor %}
     <div class="example-wrapper">
-
 
         {% for user in users %}
 
-           <h2>{{ user.username }}</h2>
-            <img src="../css/files/{{ user.username }}/{{ user.path }}">
+            {% if user.path == 'default-pp.png' %}
+                {% set path = '../css/files/system-images/' ~ user.path %}
+            {% else %}
+                {% set path = '../css/files/' ~ user.username ~ '/' ~ user.path %}
+            {% endif %}
+
+            <h2>{{ user.username }}</h2>
+            <img src="{{ path }}">
+
+            {% if friendStatus == 'my profile' %}
+                <h2>This is my own profile, offer me the edit profile button</h2>
+                <a href="{{ path('edit_profile', {id: user.id}) }}">Edit my Profile</a>
+            {% elseif friendStatus == 'friend' %}
+                <h2>We are friends</h2>
+                <a class="remove-friend" href="{{ path('friendrequest_remove', {id: user.id}) }}">Remove friend</a>
+            {% elseif friendStatus == 'requested' %}
+                <h2>I have requested to be friends with this person</h2>
+                <a class="reject-request" href="{{ path('friendrequest_reject', {id: user.id}) }}">Cancel Friend
+                    Request</a>
+            {% elseif friendStatus == 'received' %}
+                <h2> This person has requested to be friends with me </h2>
+                <a class="accept-request" href="{{ path('friendrequest_accept', {id: user.id}) }}">Accept Friend
+                    Request</a>
+            {% else %}
+                <a href="{{ path('friendrequest_send', {id: user.id}) }}" class="fa fa-post-o like-post add-friend">Add
+                    friend</a>
+            {% endif %}
+
+            <div id="posts">
+                {% for post in posts %}
+
+                    <div class="post">
+                        {{ post.title }}
+                        {{ post.body }}
+                        {% if post.path %}
+                            <img src="../css/files/{{ user.username }}/posts/{{ post.path }}">
+                        {% endif %}
+                        {#<div class="post-like-count">{{ post.likeCount }}</div>#}
+                        {#<a href="{{ path('post_toggle_like', {id: post.id}) }}" class="fa fa-post-o like-post js-like-post">Like</a>#}
+                        {% if friendStatus == 'my profile' %}
+                            <a href="#" class="delete-post" data-id="{{ post.id }}">Delete Post</a>
+                        {% endif %}
+                    </div>
+
+                {% endfor %}
+            </div>
 
         {% endfor %}
 
-        {% for post in posts %}
-
-            {{ post.title }}
-            {{ post.body }}
-
-        {% endfor %}
-
-        <br/>
-        This friendly message is coming from:
-        <ul>
-            <li>Your controller at <code><a href="{{ '/Applications/MAMP/htdocs/social-media/src/Controller/FeedController.php'|file_link(0) }}">src/Controller/FeedController.php</a></code></li>
-            <li>Your template at <code><a href="{{ '/Applications/MAMP/htdocs/social-media/templates/feed/index.html.twig'|file_link(0) }}">templates/feed/index.html.twig</a></code></li>
-        </ul>
     </div>
 {% endblock %}

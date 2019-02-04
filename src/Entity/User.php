@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,7 +31,7 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=191)
+     * @ORM\Column(type="string", length=191, unique=true)
      */
     private $email;
 
@@ -41,6 +40,116 @@ class User implements UserInterface, \Serializable
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $friends = [];
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $sent_requests = [];
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $received_requests = [];
+
+    /**
+     * @return mixed
+     */
+    public function getSentRequests()
+    {
+        return $this->sent_requests;
+    }
+
+    /**
+     * @param mixed $sent_requests
+     */
+    public function setSentRequests($sent_requests): void
+    {
+        $this->sent_requests = $sent_requests;
+    }
+
+    /**
+     * @param $sent_requests
+     */
+    public function addSentRequests($sent_requests)
+    {
+        array_push($this->sent_requests, $sent_requests);
+    }
+
+    /**
+     * @param $sent_requests
+     */
+    public function removeSentRequests($sent_requests)
+    {
+        unset($this->sent_requests[$sent_requests]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedRequests()
+    {
+        return $this->received_requests;
+    }
+
+    /**
+     * @param mixed $received_requests
+     */
+    public function setReceivedRequests($received_requests): void
+    {
+        $this->received_requests = $received_requests;
+    }
+
+    /**
+     * @param $received_requests
+     */
+    public function addReceivedRequests($received_requests)
+    {
+        array_push($this->received_requests, $received_requests);
+    }
+
+    /**
+     * @param $received_requests
+     */
+    public function removeReceivedRequests($received_requests)
+    {
+        unset($this->received_requests[$received_requests]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFriends()
+    {
+        return $this->friends;
+    }
+
+    /**
+     * @param mixed $friends
+     */
+    public function setFriends($friends): void
+    {
+        $this->friends = $friends;
+    }
+
+    /**
+     * @param $friends
+     */
+    public function addFriends($friends)
+    {
+        array_push($this->friends, $friends);
+    }
+
+    /**
+     * @param $friends
+     */
+    public function removeFriends($friends)
+    {
+        unset($this->friends[$friends]);
+    }
 
     /**
      * @Assert\File(maxSize="6000000")
@@ -62,29 +171,17 @@ class User implements UserInterface, \Serializable
      */
     public $path;
 
-    protected function getUploadRootDir()
+    public function getPath()
     {
-        return __DIR__ . '/../../public/css/' . $this->getUploadDir();
+        return $this->path;
     }
 
-    protected function getUploadDir()
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path): void
     {
-        return 'files';
-    }
-
-    public function uploadImage()
-    {
-        $fileSystem = new Filesystem();
-        $fileSystem->mkdir('css/files/' . $this->getUsername());
-        $this->getProfilePicture()->move(
-            $this->getUploadRootDir() . '/' . $this->getUsername(),
-            $this->getProfilePicture()->getClientOriginalName()
-        );
-
-        $fileName = $this->getProfilePicture()->getClientOriginalName();
-        $this->path = $fileName;
-
-        $this->profilePicture = null;
+        $this->path = $path;
     }
 
 

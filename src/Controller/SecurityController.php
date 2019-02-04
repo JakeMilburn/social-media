@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ChangePasswordType;
 use App\Form\RegistrationType;
-use http\Env\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\Service\ImgHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,9 +64,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/register", name="register")
      * @param              Request $request
+     * @param ImgHandler $imgHandler
      * @return             \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function register(Request $request)
+    public function register(Request $request, ImgHandler $imgHandler)
     {
         $user = new User();
 
@@ -84,7 +85,13 @@ class SecurityController extends AbstractController
             $user->setRoles(['ROLE_USER']);
 
             $entityManager = $this->getDoctrine()->getManager();
-            $user->uploadImage();
+
+            if ($user->getProfilePicture() === null) {
+                $user->setPath('default-pp.png');
+            } else {
+                $user->setPath($imgHandler->uploadImage($user));
+            }
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -95,6 +102,62 @@ class SecurityController extends AbstractController
             'security/register.html.twig',
             array(
                 'form' => $form->createview(),
+            )
+        );
+    }
+
+
+    /**
+     * @Route("/profile/password/{id}", name="change_password")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function changePassword(Request $request)
+    {
+        $form = $this->createForm(ChangePasswordType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $user = $this->getUser();
+
+            //Sets a boolean variable based on if the current password entered is the
+            //same as in the db
+            $checkPass = $this->encoder->isPasswordValid($user, $data['oldPassword']);
+
+            //If the current password is the same as in the db then update to the new password
+            if ($checkPass == true) {
+
+                //Check if the new password is the same as the old password
+                if ($this->encoder->isPasswordValid($user, $data['newPassword']) == true) {
+                    $this->addFlash('error', 'Your new password must be different to your current password');
+
+                } else {
+                    $user->setPassword(
+                        $this->encoder->encodePassword($user, $data['newPassword'])
+                    );
+
+                    $entityManager = $this->getDoctrine()->getManager();
+
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+
+                    $this->addFlash('success', 'Your password has been updated successfully!');
+
+                    return $this->redirectToRoute('profile', ['id' => $user->getId()]);
+                }
+
+            } else {
+                $this->addFlash('error', 'The current password that you entered is incorrect');
+            }
+
+        }
+
+        return $this->render(
+            'security/changepasswd.html.twig',
+            array(
+                'form' => $form->createView(),
             )
         );
     }

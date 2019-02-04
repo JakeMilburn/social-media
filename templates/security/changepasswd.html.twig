@@ -1,0 +1,9 @@
+{% for msg in app.session.flashBag.get('error') %}
+    <div class="alert alert-error">
+        {{ msg }}
+    </div>
+{% endfor %}
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}

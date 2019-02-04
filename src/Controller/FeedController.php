@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
+use App\Form\EditProfileType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class FeedController extends AbstractController
 {
@@ -36,6 +39,7 @@ class FeedController extends AbstractController
             ->getRepository(Post::class)
             ->findByNot('author', $user->getId());
 
+
         return $this->render(
             'feed/feed.html.twig',
             array
@@ -60,7 +64,7 @@ class FeedController extends AbstractController
             );
 
         //Gets the user object
-        //@TODO Probably a better way of doing this, maybe load user in a service
+        //@TODO Probably a better way of doing this, maybe load user in a service rather than constantly in Controllers
         $user = $this->getDoctrine()
             ->getRepository(User::class)
             ->findBy(
@@ -68,16 +72,68 @@ class FeedController extends AbstractController
             );
 
 
+        $friendStatus = null;
+
+        //Check that the user is logged in
+        if($this->getUser()) {
+            //Load the current user and get their UID
+            $currentUserId = $this->getUser()->getId();
+
+            //Checking the status of a friend request
+            if ($currentUserId == $user[0]->getId()) {
+                $friendStatus = 'my profile';
+            } elseif (array_search($currentUserId, array_column($user[0]->getFriends(), '0')) !== false) {
+                $friendStatus = 'friend';
+            } elseif (array_search($currentUserId, array_column($user[0]->getReceivedRequests(), '0')) !== false) {
+                $friendStatus = 'requested';
+            } elseif (array_search($currentUserId, array_column($user[0]->getSentRequests(), '0')) !== false) {
+                $friendStatus = 'received';
+            } else {
+                $friendStatus = null;
+            }
+        }
+
+
         return $this->render(
             'feed/profile.html.twig',
             array
             (
-                //@TODO Am aware that this passes the hashed password, needs refactored
+                //@TODO Am aware that this passes the hashed password, probably not good / avoidable
                 'users' => $user,
+                'friendStatus' => $friendStatus,
                 'posts' => $posts,
             )
         );
 
+    }
+
+
+    /**
+     * @Route("/profile/edit/{id}", name="edit_profile")
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     */
+    public function editProfile(User $user, Request $request)
+    {
+
+        $form = $this->createForm(EditProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            return $this->redirectToRoute('profile', ['id' => $user->getId()]);
+        }
+
+        return $this->render(
+            'feed/edit-profile.html.twig',
+            array(
+                'form' => $form->createview(),
+            )
+        );
     }
 
     /**

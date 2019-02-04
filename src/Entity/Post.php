@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -107,4 +108,57 @@ class Post
         $this->dateCreated = $dateCreated;
     }
 
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    public $images;
+
+    public function setImages(UploadedFile $file = null)
+    {
+        $this->images = $file;
+    }
+
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    public $path;
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path): void
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    public $likeCount = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getLikeCount()
+    {
+        return $this->likeCount;
+    }
+
+    /**
+     * @param mixed $likeCount
+     */
+    public function setLikeCount($likeCount): void
+    {
+        $this->likeCount = $likeCount;
+    }
 }
