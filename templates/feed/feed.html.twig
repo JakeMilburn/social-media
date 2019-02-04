@@ -14,7 +14,8 @@
             {#{% if user.id == app.user.id %}#}
                 {#<a href="#" class="delete-post" data-id="{{ post.id }}">Delete Post</a>#}
             {#{% endif %}#}
-            <a href="/social-media/public/profile/{{ post.author }}" class="btn btn-dark">Visit Profile</a>
+            <a href="/social-media/public/profile/{{ post.author }}">Visit Profile</a>
+            <a href="/social-media/public/profile/{{ post.author }}">Load More</a>
 
         {% endfor %}
 

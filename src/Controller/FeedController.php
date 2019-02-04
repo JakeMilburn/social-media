@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\EditProfileType;
+use App\Service\PostLoader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,17 +29,14 @@ class FeedController extends AbstractController
 
     /**
      * @Route("/feed", name="feed")
+     * @param PostLoader $postLoader
+     * @return Response
      */
-    public function feed()
+    public function feed(PostLoader $postLoader)
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
 
-        $posts = $this->getDoctrine()
-            ->getRepository(Post::class)
-            ->findByNot('author', $user->getId());
-
+        $posts = $postLoader->FeedPosts();
 
         return $this->render(
             'feed/feed.html.twig',
@@ -52,16 +50,13 @@ class FeedController extends AbstractController
     /**
      * @Route("/profile/{id}", name="profile")
      * @param $id
+     * @param PostLoader $postLoader
      * @return Response
      */
-    public function userProfiles($id)
+    public function userProfiles($id, PostLoader $postLoader)
     {
 
-        $posts = $this->getDoctrine()
-            ->getRepository(Post::class)
-            ->findBy(
-                ['author' => $id]
-            );
+        $posts = $postLoader->ProfilePosts($id);
 
         //Gets the user object
         //@TODO Probably a better way of doing this, maybe load user in a service rather than constantly in Controllers
@@ -75,7 +70,7 @@ class FeedController extends AbstractController
         $friendStatus = null;
 
         //Check that the user is logged in
-        if($this->getUser()) {
+        if ($this->getUser()) {
             //Load the current user and get their UID
             $currentUserId = $this->getUser()->getId();
 
@@ -98,7 +93,7 @@ class FeedController extends AbstractController
             'feed/profile.html.twig',
             array
             (
-                //@TODO Am aware that this passes the hashed password, probably not good / avoidable
+                //@TODO Am aware that this passes the hashed password, probably not good / maybe avoidable
                 'users' => $user,
                 'friendStatus' => $friendStatus,
                 'posts' => $posts,

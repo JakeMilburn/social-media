@@ -162,50 +162,40 @@ class SecurityController extends AbstractController
         );
     }
 
-//  /**
-//   * @Route("/manage", name="manage")
-//   * @Method({"GET"})
-//   * @param            Request $request
-//   * @return           \Symfony\Component\HttpFoundation\Response
-//   */
-//  public function manage(Request $request)
-//  {
-//    $users = $this->getDoctrine()->getRepository(User::class)->findAll();
-//
-//    return $this->render(
-//      'security/manage.html.twig',
-//      array
-//      (
-//        'users' => $users,
-//      )
-//    );
-//  }
-//
-//
-//  /**
-//   * @Route("/perms", name="perms")
-//   * @Method({"GET"})
-//   */
-//  public function permissions()
-//  {
-//
-//    $users = $this->getDoctrine()->getRepository(User::class)->findAll();
-//    $entityManager = $this->getDoctrine()->getManager();
-//
-//    foreach ($users as $user) {
-//      $id = $user->getId();
-//      if (array_key_exists($id, $_POST)) {
-//        $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
-//      } else {
-//        $user->setRoles(['ROLE_USER']);
-//      }
-//
-//      $entityManager->persist($user);
-//    }
-//        $entityManager->flush();
-//
-//        return $this->redirectToRoute('sweet_list');
-//    }
+    /**
+     * @Route("/manage-perms", name="manage_perms")
+     * Method({"GET"})
+     * @param            Request $request
+     * @return           \Symfony\Component\HttpFoundation\Response
+     */
+    public function manage(Request $request)
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
+        if (empty($_POST)) {
+            return $this->render(
+                'security/manage-perms.html.twig',
+                array
+                (
+                    'users' => $users,
+                )
+            );
+        };
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        foreach ($users as $user) {
+            $id = $user->getId();
+            if (array_key_exists($id, $_POST)) {
+                $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+            } else {
+                $user->setRoles(['ROLE_USER']);
+            }
+
+        }
+        $entityManager->flush();
+
+        return $this->redirectToRoute('manage_perms');
+    }
 
 }

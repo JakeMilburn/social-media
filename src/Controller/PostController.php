@@ -6,6 +6,7 @@ use App\Entity\Post;
 
 use App\Form\PostType;
 use App\Service\ImgHandler;
+use App\Service\PostLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,10 +67,11 @@ class PostController extends AbstractController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function editPost(Request $request, $id)
+    public function editPost(Request $request,PostLoader $postLoader, $id)
     {
         $post = new Post();
-        $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+//        $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+        $post = $post = $postLoader->LoadSinglePost($id);
 
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -98,9 +100,10 @@ class PostController extends AbstractController
      * @param Request $request
      * @param $id
      */
-    public function delete(Request $request, $id)
+    public function delete(Request $request, PostLoader $postLoader, $id)
     {
-        $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+//        $post = $this->getDoctrine()->getRepository(Post::class)->find($id);
+        $post = $postLoader->LoadSinglePost($id);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($post);
         $entityManager->flush();

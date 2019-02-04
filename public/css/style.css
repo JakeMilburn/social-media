@@ -1,44 +1,66 @@
 body {
-  margin: 0; }
+  margin: 0;
+}
 
 .navbar {
-  background-color: #7CCD7C; }
-
-/* Dropdown Button */
-.dropbtn {
+  background-color: #e54d42;
+}
+.navbar .container {
+  padding: 30px 300px 30px 300px;
+}
+.navbar .container .navbar-brand {
   color: white;
+  display: inline-block;
+  font-size: 20px;
+  width: 20%;
+  text-decoration: none;
+}
+.navbar .container form {
+  display: inline-block;
+  width: 50%;
+  text-align: center;
+}
+.navbar .container .navbar-nav {
+  display: inline-block;
+  float: right;
+  margin: 0;
+}
+.navbar .container .navbar-nav li {
+  display: inline-block;
+  padding-right: 10px;
+}
+.navbar .container .navbar-nav li.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.navbar .container .navbar-nav li.dropdown a.dropbtn {
   font-size: 16px;
   border: none;
-  cursor: pointer; }
-
-/* Dropdown button on hover & focus */
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block; }
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
+  cursor: pointer;
+}
+.navbar .container .navbar-nav li.dropdown .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1; }
-
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
+  z-index: 1;
+}
+.navbar .container .navbar-nav li.dropdown .dropdown-content.show {
+  display: block;
+}
+.navbar .container .navbar-nav li.dropdown .dropdown-content a {
+  color: white;
   padding: 12px 16px;
   text-decoration: none;
-  display: block; }
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #ddd; }
-
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {
-  display: block; }
+  display: block;
+}
+.navbar .container .navbar-nav li.dropdown .dropdown-content a:hover {
+  background-color: #ddd;
+}
+.navbar .container .navbar-nav li a {
+  text-decoration: none;
+  color: #ffffff;
+}
 
 /*# sourceMappingURL=style.css.map */
