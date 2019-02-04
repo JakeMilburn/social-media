@@ -5,62 +5,99 @@ body {
 .navbar {
   background-color: #e54d42;
 }
-.navbar .container {
-  padding: 30px 300px 30px 300px;
+@media screen and (min-width: 992px) {
+  .navbar .container {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 }
-.navbar .container .navbar-brand {
+@media screen and (min-width: 1400px) {
+  .navbar .container {
+    padding: 30px 150px 30px 150px;
+    text-align: initial;
+  }
+}
+.navbar .container a.navbar-brand {
   color: white;
-  display: inline-block;
-  font-size: 20px;
-  width: 20%;
   text-decoration: none;
+  text-align: center;
+  width: 100%;
+  font-size: 24px;
+  padding: 10px 0 10px 0;
+  display: block;
+}
+@media screen and (min-width: 992px) {
+  .navbar .container a.navbar-brand {
+    width: 20%;
+    font-size: 20px;
+    padding: 0;
+    display: inline-block;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .navbar .container a.navbar-brand {
+    width: 15%;
+  }
 }
 .navbar .container form {
-  display: inline-block;
-  width: 50%;
   text-align: center;
+  padding-bottom: 10px;
 }
-.navbar .container .navbar-nav {
-  display: inline-block;
-  float: right;
+@media screen and (min-width: 992px) {
+  .navbar .container form {
+    padding: 0;
+    width: 40%;
+    font-size: 20px;
+    display: inline-block;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .navbar .container form {
+    width: 50%;
+  }
+}
+.navbar .container ul.navbar-nav {
   margin: 0;
+  text-align: center;
+  padding: 0 0 10px 0;
 }
-.navbar .container .navbar-nav li {
+@media screen and (min-width: 992px) {
+  .navbar .container ul.navbar-nav {
+    text-align: initial;
+    padding: 0;
+    display: inline-block;
+    float: right;
+  }
+}
+.navbar .container ul.navbar-nav li.nav-item {
   display: inline-block;
+}
+.navbar .container ul.navbar-nav li.nav-item:not(:last-child) {
   padding-right: 10px;
 }
-.navbar .container .navbar-nav li.dropdown {
+.navbar .container ul.navbar-nav li.nav-item.dropdown {
   position: relative;
   display: inline-block;
 }
-.navbar .container .navbar-nav li.dropdown a.dropbtn {
+.navbar .container ul.navbar-nav li.nav-item.dropdown a.dropbtn {
   font-size: 16px;
   border: none;
   cursor: pointer;
 }
-.navbar .container .navbar-nav li.dropdown .dropdown-content {
+.navbar .container ul.navbar-nav li.nav-item.dropdown .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
-.navbar .container .navbar-nav li.dropdown .dropdown-content.show {
+.navbar .container ul.navbar-nav li.nav-item.dropdown .dropdown-content.show {
   display: block;
 }
-.navbar .container .navbar-nav li.dropdown .dropdown-content a {
+.navbar .container ul.navbar-nav li.nav-item.dropdown .dropdown-content a {
+  text-decoration: none;
   color: white;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-.navbar .container .navbar-nav li.dropdown .dropdown-content a:hover {
-  background-color: #ddd;
-}
-.navbar .container .navbar-nav li a {
-  text-decoration: none;
-  color: #ffffff;
 }
 
 /*# sourceMappingURL=style.css.map */
